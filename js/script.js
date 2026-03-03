@@ -1,16 +1,10 @@
 // =============================================
 //  CONFIGURATION
 // =============================================
-// Support for environment variables in Vercel deployment
-const getEnvVar = (name, defaultValue = '') => {
-  // In browser environment, try window.__ENV__ or use default
-  return (typeof window !== 'undefined' && window.__ENV__ && window.__ENV__[name]) || defaultValue;
-};
 
 const CONFIG = {
-  // Replace with your real Sheet ID after publishing the sheet
-  // Can also be set via environment variable SHEET_ID in Vercel
-  SHEET_ID: getEnvVar('SHEET_ID', ''),
+  // Your Google Sheet ID (get from: https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_HERE/)
+  SHEET_ID: '1oSAqGAqMD1vX_khpbDo9qR00qyQ4j860TaIunIU3c',
   SHEET_NAME: 'Sheet1',     // The tab name inside the spreadsheet
   
   // OWNER INFORMATION
