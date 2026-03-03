@@ -2,7 +2,6 @@
   "buildCommand": "",
   "outputDirectory": ".",
   "installCommand": "",
-  "framework": "static",
   "env": {
     "SHEET_ID": "@sheet_id"
   }
