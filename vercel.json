@@ -1,8 +1,5 @@
 {
   "buildCommand": "",
   "outputDirectory": ".",
-  "installCommand": "",
-  "env": {
-    "SHEET_ID": "@sheet_id"
-  }
+  "installCommand": ""
 }
