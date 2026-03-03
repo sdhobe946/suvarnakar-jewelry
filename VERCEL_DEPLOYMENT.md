@@ -43,7 +43,7 @@ git push -u origin main
 ### 2.1 Sign up / Login to Vercel
 1. Visit https://vercel.com
 2. Click "Sign Up" (use GitHub account for easy integration)
-3. Authorize Vercel to access your GitHub
+3. Authorize Vercel to access your GitHubhttps://docs.google.com/spreadsheets/d/COPY_THIS_PART/edithttps://docs.google.com/spreadsheets/d/COPY_THIS_PART/edit
 
 ### 2.2 Import Your Project
 1. Click **"New Project"** (or go to https://vercel.com/new)
@@ -99,7 +99,7 @@ category | name | name_mr | price | image_url | badge | phone
 
 **Example Product Row:**
 ```
-product | Elegant Gold Necklace | सोन्याचे हार | ₹2,500 | https://drive.google.com/uc?export=view&id=YOUR_FILE_ID | 1GM Gold | 7063857641
+product | Elegant Gold Necklace | सोन्याचे हार | ₹2,500 | https://drive.google.com/uc?export=view&id=YOUR_FILE_ID | 1GM Gold | 9511825911
 ```
 
 ---

@@ -22,7 +22,7 @@ Set `category` = **product**
 
 | category | name | name_mr | price | image_url | badge | phone |
 |---|---|---|---|---|---|---|
-| product | Elegant Gold Necklace | सोन्याचे हार | ₹2,500 | https://drive.google.com/uc?export=view&id=YOUR_FILE_ID | 1GM Gold | 7063857641 |
+| product | Elegant Gold Necklace | सोन्याचे हार | ₹2,500 | https://drive.google.com/uc?export=view&id=YOUR_FILE_ID | 1GM Gold | 9511825911 |
 | product | Designer Gold Ring | सोन्याची अंगठी | Call for Price | | New Arrival | |
 | product | Gold Bangles | सोन्याच्या बांगड्या | ₹1,800 | https://... | Popular | |
 
@@ -102,4 +102,4 @@ The website will **automatically load all your products and images** from the sh
 | price | Optional | `₹2,500` or `Call for Price` |
 | image_url | Optional | `https://drive.google.com/uc?export=view&id=...` |
 | badge | Optional | `1GM Gold`, `New`, `Popular`, `Bridal` |
-| phone | Optional | `7063857641` (overrides default) |
+| phone | Optional | `9511825911` (overrides default) |
