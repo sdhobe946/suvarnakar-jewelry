@@ -1,0 +1,6 @@
+SETUP_GUIDE.md
+.git
+.gitignore
+node_modules
+.DS_Store
+*.log

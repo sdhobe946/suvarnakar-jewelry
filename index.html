@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="सुवर्णकार अलंकार केंद्र - Risod's trusted 1 gram gold jewellery specialist."/>
+  <title>सुवर्णकार अलंकार केंद्र | Risod</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+
+<!-- GENDER SELECT MODAL -->
+<div class="modal-overlay" id="genderSelectModal">
+  <div class="modal gender-modal">
+    <button class="modal-close" onclick="closeGenderSelectModal()" aria-label="Close">✕</button>
+    <div class="modal-title">Featured Jewellery Collection</div>
+    <p class="modal-sub">Select category to browse beautiful gold jewellery</p>
+    
+    <div class="gender-options">
+      <div class="gender-card" onclick="selectGender('man')">
+        <div class="gender-icon">👨</div>
+        <div class="gender-name">For Men</div>
+        <div class="gender-desc">Rings, Bracelets, Chains & More</div>
+      </div>
+      <div class="gender-card" onclick="selectGender('woman')">
+        <div class="gender-icon">👩</div>
+        <div class="gender-name">For Women</div>
+        <div class="gender-desc">Kanatle Patte, Zumber & More</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUBCATEGORY SELECT MODAL -->
+<div class="modal-overlay" id="subcategorySelectModal">
+  <div class="modal subcategory-modal">
+    <button class="modal-close" onclick="document.getElementById('subcategorySelectModal').classList.remove('open')" aria-label="Close">✕</button>
+    <div class="modal-title" id="subcategoryTitle">For Men</div>
+    <p class="modal-sub">Select product type to browse</p>
+    
+    <div class="subcategory-options" id="subcategoryList">
+      <!-- Populated by JavaScript -->
+    </div>
+    
+    <button class="btn-back-modal" onclick="openGenderSelectModal(); document.getElementById('subcategorySelectModal').classList.remove('open');">← Back</button>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
+<div class="modal-overlay" id="adminLoginModal">
+  <div class="modal admin-login-modal">
+    <div class="modal-title">🔐 Admin Login</div>
+    <p class="modal-sub">Enter admin password to access the control panel</p>
+    
+    <div class="modal-input-group" style="flex-direction: column; gap: 16px;">
+      <input class="modal-input" id="adminPassword" type="password" placeholder="Enter admin password"/>
+      <button class="btn-load" onclick="verifyAdminPassword()">Login</button>
+      <button class="modal-skip" onclick="closeAdminLogin()" style="margin: 0;">Back to Site</button>
+    </div>
+    
+    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--text-muted);">
+      💡 <strong>Owner Tip:</strong> Press <code>Ctrl+Shift+A</code> anytime to access admin login
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" class="admin-panel">
+  <div class="admin-header">
+    <div class="admin-title">🔨 Admin Control Panel</div>
+    <div class="admin-header-actions">
+      <button class="admin-back-btn" onclick="logoutAdmin()" title="Back to customer view">← Back to Site</button>
+      <button class="admin-logout" onclick="logoutAdmin()">🚪 Logout</button>
+    </div>
+  </div>
+  
+  <div class="admin-container">
+    <div class="admin-sidebar">
+      <button class="admin-tab active" onclick="switchAdminTab('products')">📦 Featured</button>
+      <button class="admin-tab" onclick="switchAdminTab('wedding')">👰 Wedding</button>
+      <button class="admin-tab" onclick="switchAdminTab('partyware')">✨ Party Ware</button>
+      <button class="admin-tab" onclick="switchAdminTab('sheet')">🗄️ Sheet</button>
+      <button class="admin-tab" onclick="switchAdminTab('settings')">⚙️ Settings</button>
+    </div>
+    
+    <div class="admin-content">
+      <!-- PRODUCTS TAB -->
+      <div id="adminProducts" class="admin-tab-content active">
+        <div class="admin-section-title">Manage Featured Collection</div>
+        <button class="btn-add-product" onclick="openAddCategoryModal('product')">+ Add Featured Product</button>
+        
+        <div id="adminProductsList" class="admin-products-list"></div>
+      </div>
+      
+      <!-- WEDDING TAB -->
+      <div id="adminWedding" class="admin-tab-content">
+        <div class="admin-section-title">Manage Wedding Collection</div>
+        <button class="btn-add-product" onclick="openAddCategoryModal('wedding')">+ Add Wedding Item</button>
+        
+        <div id="adminWeddingList" class="admin-products-list"></div>
+      </div>
+
+      <!-- PARTYWARE TAB -->
+      <div id="adminPartyware" class="admin-tab-content">
+        <div class="admin-section-title">Manage Party Ware Collection</div>
+        <button class="btn-add-product" onclick="openAddCategoryModal('partyware')">+ Add Party Ware Item</button>
+        
+        <div id="adminPartywaveList" class="admin-products-list"></div>
+      </div>
+      
+      <!-- SHEET TAB -->
+      <div id="adminSheet" class="admin-tab-content">
+        <div class="admin-section-title">Google Sheet Connection</div>
+        
+        <div class="admin-settings-group">
+          <label>Sheet ID:</label>
+          <input type="text" id="adminSheetId" class="admin-setting-input" placeholder="Paste your Google Sheet ID here"/>
+          <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">
+            Find it in the URL between <code>/d/</code> and <code>/edit</code>
+          </div>
+          <button class="btn-save-settings" onclick="connectAdminSheet()" style="margin-top: 12px;">Connect Sheet</button>
+        </div>
+        
+        <div class="admin-settings-group">
+          <label>Current Status:</label>
+          <div id="sheetStatus" style="padding: 12px; background: var(--bg); border-radius: 8px; color: var(--text-muted);">
+            Not connected
+          </div>
+        </div>
+        
+        <div class="admin-settings-group">
+          <button class="btn-save-settings" onclick="refreshFromSheet()" style="width: 100%;">🔄 Refresh from Sheet</button>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 12px;">
+            This will reload all product data from your connected Google Sheet.
+          </p>
+        </div>
+
+        <div class="admin-settings-group">
+          <label>Sync Products to Sheet (Advanced):</label>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+            To automatically sync admin-added products to your Google Sheet, you need to set up Google Apps Script. <a href="javascript:showAppsScriptSetup()" style="color: var(--gold); text-decoration: underline;">Click here for setup instructions</a>.
+          </p>
+          <button class="btn-save-settings" onclick="exportProductsForSheet()" style="width: 100%;">📥 Download Products as CSV</button>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">
+            Export your admin-added products to copy into your Google Sheet manually.
+          </p>
+        </div>
+
+        <div class="admin-settings-group">
+          <label>🐛 Debug - View All Saved Products:</label>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+            If your newly added products are missing, check the data saved in your browser.
+          </p>
+          <button class="btn-save-settings" onclick="showDebugProductsData()" style="width: 100%;">View All Products Data</button>
+        </div>
+      </div>
+      
+      <!-- SETTINGS TAB -->
+      <div id="adminSettings" class="admin-tab-content">
+        <div class="admin-section-title">Shop Settings</div>
+        
+        <!-- OWNER INFO -->
+        <div class="admin-settings-group">
+          <h3>👤 Owner Information</h3>
+          <label>Owner Name:</label>
+          <input type="text" id="settingOwnerName" class="admin-setting-input" placeholder="Your name"/>
+          
+          <label>Owner Email:</label>
+          <input type="email" id="settingOwnerEmail" class="admin-setting-input" placeholder="your@email.com"/>
+        </div>
+
+        <!-- SHOP DETAILS -->
+        <div class="admin-settings-group">
+          <h3>🏪 Shop Details</h3>
+          <label>Shop Name:</label>
+          <input type="text" id="settingShopName" class="admin-setting-input" placeholder="e.g., सुवर्णकार अलंकार केंद्र"/>
+          
+          <label>Shop Address:</label>
+          <input type="text" id="settingShopAddress" class="admin-setting-input" placeholder="e.g., Main Street, Risod"/>
+          
+          <label>Shop City:</label>
+          <input type="text" id="settingShopCity" class="admin-setting-input" placeholder="e.g., Risod, Maharashtra"/>
+        </div>
+
+        <!-- CONTACT DETAILS -->
+        <div class="admin-settings-group">
+          <h3>📞 Contact Details</h3>
+          <label>Primary Phone:</label>
+          <input type="text" id="settingPhonePrimary" class="admin-setting-input" placeholder="e.g., 7063857641"/>
+          
+          <label>Secondary Phone:</label>
+          <input type="text" id="settingPhoneSecondary" class="admin-setting-input" placeholder="e.g., 9511825911"/>
+          
+          <label>Shop Email:</label>
+          <input type="email" id="settingShopEmail" class="admin-setting-input" placeholder="shop@email.com"/>
+        </div>
+
+        <!-- SHOP DESCRIPTION -->
+        <div class="admin-settings-group">
+          <h3>✨ About Shop</h3>
+          <label>Shop Description:</label>
+          <textarea id="settingShopDesc" class="admin-setting-input" placeholder="Write about your shop, specialties, experience..."></textarea>
+          
+          <label>Business Hours:</label>
+          <input type="text" id="settingShopHours" class="admin-setting-input" placeholder="e.g., 10:00 AM - 8:00 PM"/>
+        </div>
+
+        <!-- SAVE BUTTON -->
+        <div class="admin-settings-group">
+          <button class="btn-save-settings" onclick="saveSettings()">💾 Save All Settings</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT PRODUCT MODAL -->
+<div class="modal-overlay" id="addProductModal">
+  <div class="modal product-edit-modal">
+    <button class="modal-close" onclick="closeAddProductModal()" aria-label="Close">✕</button>
+    <div class="modal-title" id="productModalTitle">Add New Product</div>
+    
+    <div class="product-edit-form">
+      <input type="hidden" id="productEditId"/>
+      
+      <div class="form-group">
+        <label>📦 Category</label>
+        <select id="productEditCategory" class="form-input" onchange="updateProductSubcategories()">
+          <option value="product">Featured Jewellery Collection</option>
+          <option value="wedding">Wedding Special Collection</option>
+          <option value="partyware">Party Ware Collection</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>🏷️ Subcategory</label>
+        <select id="productEditSubcategory" class="form-input">
+          <option value="">Select Subcategory</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Product Name (English)</label>
+        <input type="text" id="productEditName" class="form-input" placeholder="e.g. Elegant Gold Necklace"/>
+      </div>
+      
+      <div class="form-group">
+        <label>Product Name (Marathi)</label>
+        <input type="text" id="productEditNameMr" class="form-input" placeholder="e.g. सोन्याचे हार"/>
+      </div>
+      
+      <div class="form-group">
+        <label>Price</label>
+        <input type="text" id="productEditPrice" class="form-input" placeholder="e.g. ₹500 or Call for Price"/>
+      </div>
+      
+      <div class="form-group">
+        <label>Badge</label>
+        <input type="text" id="productEditBadge" class="form-input" placeholder="e.g. 1GM Gold" value="1GM Gold"/>
+      </div>
+      
+      <div class="form-group">
+        <label>Image URL</label>
+        <input type="text" id="productEditImage" class="form-input" placeholder="https://example.com/image.jpg"/>
+      </div>
+      
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="text" id="productEditPhone" class="form-input" placeholder="e.g. 7063857641"/>
+      </div>
+      
+      <div class="form-actions">
+        <button class="btn-gold" onclick="saveProductEdit()">Save Product</button>
+        <button class="btn-outline" onclick="closeAddProductModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SETUP MODAL -->
+<div class="modal-overlay" id="setupModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+    <div class="modal-title">🗄️ Connect Google Sheet</div>
+    <p class="modal-sub">Link your Google Sheet to dynamically manage all jewellery products and wedding items — no coding needed.</p>
+
+    <div class="modal-steps">
+      <div class="modal-step">
+        <div class="step-num">1</div>
+        <div class="step-text">Create a Google Sheet with columns:<br/><code>category</code> <code>name</code> <code>name_mr</code> <code>price</code> <code>image_url</code> <code>badge</code> <code>phone</code></div>
+      </div>
+      <div class="modal-step">
+        <div class="step-num">2</div>
+        <div class="step-text">Set <strong>category</strong> to <code>product</code> or <code>wedding</code> for each row.</div>
+      </div>
+      <div class="modal-step">
+        <div class="step-num">3</div>
+        <div class="step-text">Click <strong>Share → Anyone with the link → Viewer</strong>.</div>
+      </div>
+      <div class="modal-step">
+        <div class="step-num">4</div>
+        <div class="step-text">Paste the Sheet ID below (found in the URL between <code>/d/</code> and <code>/edit</code>).</div>
+      </div>
+    </div>
+
+    <div class="modal-input-group">
+      <input class="modal-input" id="modalSheetId" type="text" placeholder="e.g. 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"/>
+      <button class="btn-load" onclick="loadFromModal()">Connect</button>
+    </div>
+    <div class="modal-skip" onclick="closeModal()">Skip for now — use demo data</div>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal product-detail-modal">
+    <button class="modal-close" onclick="closeProductModal()" aria-label="Close">✕</button>
+    <div class="product-detail-content">
+      <div class="product-detail-image">
+        <img id="productDetailImg" src="" alt="Product"/>
+        <div id="productDetailPlaceholder" class="product-detail-placeholder"></div>
+        <span id="productDetailBadge" class="product-detail-badge"></span>
+      </div>
+      <div class="product-detail-info">
+        <div id="productDetailName" class="product-detail-name"></div>
+        <div id="productDetailNameMr" class="product-detail-name-mr"></div>
+        <div id="productDetailPrice" class="product-detail-price"></div>
+        <p id="productDetailDesc" class="product-detail-desc"></p>
+        <div class="product-detail-actions">
+          <a id="productDetailCall" href="tel:" class="btn-gold">📞 Call for Price</a>
+          <a id="productDetailWhatsapp" href="https://wa.me/" target="_blank" rel="noopener" class="btn-outline">💬 WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header id="header">
+  <div class="container">
+    <nav class="nav-inner">
+      <a href="#hero" class="brand-logo">सुवर्णकार अलंकार केंद्र</a>
+      <ul class="nav-links">
+        <li><a href="#highlights">आमच्याबद्दल</a></li>
+        <li><a href="#products">दागिने</a></li>
+        <li><a href="#wedding">लग्नसोहळा</a></li>
+        <li><a href="#location">पत्ता</a></li>
+        <li><a href="#contact">संपर्क</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button id="cartBtn" class="cart-btn" onclick="toggleCart()" title="Shopping Cart">🛒 Cart (0)</button>
+        <button id="adminDoorBtn" class="admin-door-btn" onclick="openAdminLogin()" title="Admin Panel - Owner Only">🔐</button>
+        <div id="ownerIndicator" class="owner-indicator" style="display: none; padding: 4px 8px; color: var(--gold); font-size: 12px; border-radius: 4px; background: rgba(212,175,55,0.1);">Owner Mode</div>
+        <button id="sheet-status" class="disconnected" onclick="openModal()" title="Connect Google Sheet">
+          <span class="dot"></span>
+          <span id="status-text">Connect Sheet</span>
+        </button>
+        <button class="dark-toggle" id="darkToggle" title="Toggle dark mode">🌙</button>
+        <button class="hamburger" id="hamburger" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+      <a href="#highlights" onclick="closeMobileNav()">आमच्याबद्दल</a>
+      <a href="#products" onclick="closeMobileNav()">दागिने</a>
+      <a href="#wedding" onclick="closeMobileNav()">लग्नसोहळा संग्रह</a>
+      <a href="#location" onclick="closeMobileNav()">पत्ता</a>
+      <a href="#contact" onclick="closeMobileNav()">संपर्क करा</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-orb orb-1"></div>
+  <div class="hero-orb orb-2"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge">✦ 1 ग्राम सोने तज्ञ ✦</div>
+      <h1 class="hero-title">सुवर्णकार<br/>अलंकार केंद्र</h1>
+      <p class="hero-tagline">"आकर्षक 1 ग्राम सोन्याचे दागिने विश्वासासह"</p>
+      <p class="hero-sub">Affordable Luxury Jewellery &nbsp;|&nbsp; Owner: Abhishekh Chakotkar &nbsp;|&nbsp; Risod, New Sonar Line</p>
+      <div class="hero-ctas">
+        <a href="#products" class="btn-gold">✦ दागिने पाहा</a>
+        <a href="#contact" class="btn-outline">📞 संपर्क करा</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-jewel">
+    <div class="jewel-ring"></div>
+    <div class="jewel-ring-2"></div>
+    <div class="jewel-center">💍</div>
+  </div>
+</section>
+
+<!-- HIGHLIGHTS -->
+<section id="highlights">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">✦ आमची वैशिष्ट्ये</div>
+      <h2 class="section-title">का निवडावे आम्हाला?</h2>
+      <div class="section-line"></div>
+      <p class="section-desc">रिसोड मधील विश्वसनीय 1 ग्राम सोन्याचे दागिने केंद्र — दर्जा, किफायतशीरता, आणि विश्वास.</p>
+    </div>
+    <div class="highlights-grid">
+      <div class="highlight-card"><div class="highlight-icon">💰</div><h3 class="highlight-title">परवडणारी किंमत</h3><p class="highlight-desc">1 ग्राम सोन्याचे दागिने अत्यंत किफायतशीर किमतीत उपलब्ध. शुद्ध सोन्याचा आनंद, कमी किमतीत.</p></div>
+      <div class="highlight-card"><div class="highlight-icon">✨</div><h3 class="highlight-title">उत्कृष्ट कारागिरी</h3><p class="highlight-desc">प्रत्येक दागिना कुशल कारागिरांनी बनवलेला. उत्तम डिझाईन आणि टिकाऊपणा हे आमचे वैशिष्ट्य.</p></div>
+      <div class="highlight-card"><div class="highlight-icon">🏅</div><h3 class="highlight-title">विश्वासार्ह ब्रँड</h3><p class="highlight-desc">रिसोड मध्ये वर्षानुवर्षे विश्वसनीय सेवा. हजारो समाधानी ग्राहक आमची ओळख आहे.</p></div>
+      <div class="highlight-card"><div class="highlight-icon">💍</div><h3 class="highlight-title">विस्तृत संग्रह</h3><p class="highlight-desc">नेकलेस, अंगठ्या, बांगड्या, ब्राइडल सेट्स — सर्व प्रसंगांसाठी सुंदर दागिने.</p></div>
+      <div class="highlight-card"><div class="highlight-icon">👰</div><h3 class="highlight-title">लग्नसोहळा स्पेशल</h3><p class="highlight-desc">विवाहसोहळ्यासाठी विशेष ब्राइडल संग्रह.  क्षण अजून संस्मरणीय करा.</p></div>
+      <div class="highlight-card"><div class="highlight-icon">🛍️</div><h3 class="highlight-title">दैनंदिन परिधान</h3><p class="highlight-desc">रोजच्या वापरासाठी हलके व टिकाऊ दागिने. सौंदर्य आणि सोयीचा उत्तम मेळ.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS SLIDER -->
+<section id="products">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">✦ आमचे संग्रह</div>
+      <h2 class="section-title">Browse Our Collections</h2>
+      <div class="section-line"></div>
+      <p class="section-desc">Choose a collection to explore our beautiful 1-gram gold jewellery.</p>
+    </div>
+    <div id="products-container">
+      <div class="loading-state"><div class="spinner"></div><p>दागिने लोड होत आहेत...</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORY PRODUCT LISTING -->
+<section id="categoryViewSection" style="display: none;">
+  <div class="container">
+    <div class="category-header">
+      <button class="btn-back-category" onclick="goBackToHome()">← Back to Categories</button>
+      <div class="category-title-section reveal">
+        <div class="section-tag">✦ आमचे संग्रह</div>
+        <h2 class="section-title" id="categoryTitle">Collection</h2>
+        <div class="section-line"></div>
+      </div>
+    </div>
+    <div id="categoryProductsContainer">
+      <div class="loading-state"><div class="spinner"></div><p>दागिने लोड होत आहेत...</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CART SECTION -->
+<section id="cartSection" style="display: none;">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">✦ आपली ऑर्डर</div>
+      <h2 class="section-title">Your Cart</h2>
+      <div class="section-line"></div>
+    </div>
+    <div id="cartContainer">
+      <div class="cart-empty"><p>Your cart is empty</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- WEDDING COLLECTION (kept for reference, but hidden) -->
+<section id="wedding" style="display: none;">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">✦ विवाह संग्रह</div>
+      <h2 class="section-title">Wedding Special Collection</h2>
+      <div class="section-line"></div>
+      <p class="section-desc">आपल्या खास दिवसासाठी विशेष दागिने संग्रह.</p>
+    </div>
+    <div id="wedding-container">
+      <div class="loading-state"><div class="spinner"></div><p>विवाह संग्रह लोड होत आहे...</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- LOCATION -->
+<section id="location">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">✦ आमचा पत्ता</div>
+      <h2 class="section-title">Find Us in Risod</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="map-wrapper reveal">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30143.0!2d76.8!3d19.95!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bd2fd!2sRisod%2C+Maharashtra!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Location"></iframe>
+    </div>
+    <div class="location-info reveal">
+      <div class="loc-item"><div class="loc-icon">📍</div><div><strong>पत्ता:</strong><br/>Risod, New Sonar Line, Maharashtra</div></div>
+      <div class="loc-item"><div class="loc-icon">⏰</div><div><strong>वेळ:</strong><br/>सोम – शनि: सकाळी 9 – रात्री 9</div></div>
+      <div class="loc-item"><div class="loc-icon">🏪</div><div><strong>दुकान:</strong><br/>सुवर्णकार अलंकार केंद्र</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">✦ संपर्क करा</div>
+      <h2 class="section-title">Get In Touch</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-card reveal">
+        <div class="contact-label">दुकान मालक</div>
+        <div class="contact-name" id="contactOwnerName">Abhishekh Chakotkar</div>
+        <div class="contact-location" id="contactShopLocation">📍 Risod, New Sonar Line</div>
+        <div class="contact-numbers" id="contactPhones">
+          <a href="tel:7063857641" class="btn-phone">📞 <span>+91 70638 57641</span></a>
+          <a href="tel:9511825911" class="btn-phone">📞 <span>+91 95118 25911</span></a>
+        </div>
+      </div>
+      <div class="contact-card reveal">
+        <div class="contact-label">WhatsApp वर संपर्क</div>
+        <div class="contact-name">त्वरित उत्तर</div>
+        <div class="contact-location">💬 WhatsApp Chat उपलब्ध</div>
+        <div class="contact-numbers" id="contactWhatsapp">
+          <a href="https://wa.me/917063857641?text=नमस्कार%2C%20मला%20दागिन्यांबद्दल%20माहिती%20हवी%20आहे." target="_blank" rel="noopener" class="btn-whatsapp">💬 <span>+91 70638 57641</span></a>
+          <a href="https://wa.me/919511825911?text=नमस्कार%2C%20मला%20दागिन्यांबद्दल%20माहिती%20हवी%20आहे." target="_blank" rel="noopener" class="btn-whatsapp">💬 <span>+91 95118 25911</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="footer">
+  <div class="container">
+    <div class="footer-gold-line"></div>
+    <div class="footer-inner">
+      <div class="footer-brand" id="footerShopName">सुवर्णकार अलंकार केंद्र</div>
+      <div class="footer-copy" id="footerCopy">© 2024 सुवर्णकार अलंकार केंद्र, Risod. All rights reserved.<br/>Owner: Abhishekh Chakotkar</div>
+      <div class="footer-links"><a href="#hero">Home</a><a href="#products">Products</a><a href="#contact">Contact</a></div>
+    </div>
+  </div>
+</footer>
+
+<button id="back-top" aria-label="Back to top">↑</button>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="js/script.js"></script>
+
+</body>
+</html>
